@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Icon } from 'semantic-ui-react';
 import { apiBaseUrl } from '../constants';
-import { useStateValue } from '../state';
+import { addPatient, useStateValue } from '../state';
 import { Gender, Patient } from '../types';
 
 const PatientInformation = () => {
@@ -18,7 +18,7 @@ const PatientInformation = () => {
         const { data: patientFromApi } = await axios.get<Patient>(
           `${apiBaseUrl}/patients/${patientId}`,
         );
-        dispatch({ type: 'ADD_PATIENT', payload: patientFromApi });
+        dispatch(addPatient(patientFromApi));
         return patientFromApi;
       } catch (e) {
         console.error(e);
@@ -45,8 +45,12 @@ const PatientInformation = () => {
       <>
         <h2>
           {patient.name} {getPatientGenderIcon(patient.gender)}
-            </h2>
-        {patient.ssn ? (<>{`ssn: ${patient.ssn}`} <br/></>) : null}
+        </h2>
+        {patient.ssn ? (
+          <>
+            {`ssn: ${patient.ssn}`} <br />
+          </>
+        ) : null}
         <p>{`occupation: ${patient.occupation}`}</p>
       </>
     );

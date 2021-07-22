@@ -52,6 +52,30 @@ const PatientInformation = () => {
           </>
         ) : null}
         <p>{`occupation: ${patient.occupation}`}</p>
+        {patient.entries.length !== 0 ? (
+          <div>
+            <h3>entries</h3>
+            {patient.entries.map((entry, index) => {
+              return (
+                <div key={index}>
+                  <p>
+                    {entry.date} <em>{entry.description}</em>
+                  </p>
+                  {entry.diagnosisCodes !== undefined &&
+                  entry.diagnosisCodes.length !== 0 ? (
+                    <>
+                      <ul>
+                        {entry.diagnosisCodes.map((code, index) => {
+                          return <li key={index}>{code}</li>;
+                        })}
+                      </ul>
+                    </>
+                  ) : null}
+                </div>
+              );
+            })}
+          </div>
+        ) : null}
       </>
     );
   } else {

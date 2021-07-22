@@ -9,9 +9,9 @@ import { Gender, Patient } from '../types';
 const PatientInformation = () => {
   const { id } = useParams<{ id: string }>();
   const [patient, setPatient] = useState<Patient | undefined>(undefined);
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnoses }, dispatch] = useStateValue();
   const getPatient = async (patientId: string) => {
-    if (patientId) {
+    if (Object.keys(patients).includes(id)) {
       return patients[id];
     } else {
       try {
@@ -23,6 +23,16 @@ const PatientInformation = () => {
       } catch (e) {
         console.error(e);
       }
+    }
+  };
+  const getDiagnosisName = (diagnosisCode: string): string | null => {
+    const diagnosisArray = diagnoses.filter(
+      (diagnosis) => diagnosis.code === diagnosisCode,
+    );
+    if (diagnosisArray.length !== 0) {
+      return diagnosisArray[0].name;
+    } else {
+      return null;
     }
   };
   useEffect(() => {
@@ -66,7 +76,11 @@ const PatientInformation = () => {
                     <>
                       <ul>
                         {entry.diagnosisCodes.map((code, index) => {
-                          return <li key={index}>{code}</li>;
+                          return (
+                            <li key={index}>
+                              {code} {getDiagnosisName(code)}
+                            </li>
+                          );
                         })}
                       </ul>
                     </>

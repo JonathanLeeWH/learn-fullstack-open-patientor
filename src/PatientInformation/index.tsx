@@ -3,13 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Icon } from 'semantic-ui-react';
 import { apiBaseUrl } from '../constants';
+import EntryDetails from '../Entries/EntryDetails';
 import { addPatient, useStateValue } from '../state';
-import { Gender, Patient } from '../types';
+import { Entry, Gender, Patient } from '../types';
 
 const PatientInformation = () => {
   const { id } = useParams<{ id: string }>();
   const [patient, setPatient] = useState<Patient | undefined>(undefined);
-  const [{ patients, diagnoses }, dispatch] = useStateValue();
+  const [{ patients }, dispatch] = useStateValue();
   const getPatient = async (patientId: string) => {
     if (Object.keys(patients).includes(id)) {
       return patients[id];
@@ -23,16 +24,6 @@ const PatientInformation = () => {
       } catch (e) {
         console.error(e);
       }
-    }
-  };
-  const getDiagnosisName = (diagnosisCode: string): string | null => {
-    const diagnosisArray = diagnoses.filter(
-      (diagnosis) => diagnosis.code === diagnosisCode,
-    );
-    if (diagnosisArray.length !== 0) {
-      return diagnosisArray[0].name;
-    } else {
-      return null;
     }
   };
   useEffect(() => {
@@ -68,23 +59,7 @@ const PatientInformation = () => {
             {patient.entries.map((entry, index) => {
               return (
                 <div key={index}>
-                  <p>
-                    {entry.date} <em>{entry.description}</em>
-                  </p>
-                  {entry.diagnosisCodes !== undefined &&
-                  entry.diagnosisCodes.length !== 0 ? (
-                    <>
-                      <ul>
-                        {entry.diagnosisCodes.map((code, index) => {
-                          return (
-                            <li key={index}>
-                              {code} {getDiagnosisName(code)}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </>
-                  ) : null}
+                  <EntryDetails entry={entry as Entry} />
                 </div>
               );
             })}

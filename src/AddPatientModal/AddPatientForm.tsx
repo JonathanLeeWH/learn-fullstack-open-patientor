@@ -51,6 +51,7 @@ export const AddPatientForm = ({ onSubmit, onCancel } : Props ) => {
         return errors;
       }}
     >
+      {/* dirty means that the user has edited some of its fields. */}
       {({ isValid, dirty }) => {
         return (
           <Form className="form ui">
